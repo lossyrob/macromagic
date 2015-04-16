@@ -93,9 +93,11 @@ object BenchmarkBuild extends Build {
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
     libraryDependencies <++= scalaVersion {
       case "2.10.4" => Seq(
+        "org.spire-math" %% "spire-macros" % "0.9.1",
         "org.scala-lang" %  "scala-reflect" % "2.10.4",
         "org.scalamacros" %% "quasiquotes" % "2.0.1")
       case "2.11.5" => Seq(
+        "org.spire-math" %% "spire-macros" % "0.9.1",
         "org.scala-lang" %  "scala-reflect" % "2.11.5")
     },
     resolvers += Resolver.sonatypeRepo("snapshots")

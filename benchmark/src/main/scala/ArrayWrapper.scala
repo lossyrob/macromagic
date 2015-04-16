@@ -1,6 +1,10 @@
 package macromagic
 
+import macromagic.Macros._
+
 import scala.reflect._
+import scala.language.experimental.macros
+
 
 trait IntFunc {
   def apply(x: Int, y: Int, z: Int): Int
@@ -10,10 +14,13 @@ trait IntFunc2[T] {
   def apply(x: Int, y: Int, z: Int): T
 }
 
-class ArrayWrapper(arr: Array[Int]) {
+class ArrayWrapper(arr: Array[Int]) extends Mapper[ArrayWrapper]{
   val size = arr.size
 
-  def map(mapper: IntMapper): Array[Int] = {
+  def map(f: (Int, Int, Int) => Int): ArrayWrapper = 
+    macro intMapper_impl2[ArrayWrapper]
+
+  def mapper(mapper: IntMapper): ArrayWrapper = {
     val result = Array.ofDim[Int](size)
     var i = 0
     while(i < size) {
@@ -21,11 +28,11 @@ class ArrayWrapper(arr: Array[Int]) {
       result(i) = mapper(x, x, x)
       i += 1
     }
-    result
+    new ArrayWrapper(result)
   }
 
 
-  def function1MapToInt(f: Int => Int): Array[Int] = {
+  def function1MapToInt(f: Int => Int): ArrayWrapper = {
     val result = arr.clone
     var i = 0
     while(i < size) {
@@ -33,7 +40,7 @@ class ArrayWrapper(arr: Array[Int]) {
       result(i) = f(x)
       i += 1
     }
-    result
+    new ArrayWrapper(result)
   }
 
   def function1MapToT[T: ClassTag](f: Int => T): Array[T] = {
@@ -47,7 +54,7 @@ class ArrayWrapper(arr: Array[Int]) {
     result
   }
 
-  def function3MapToInt(f: (Int, Int, Int) => Int): Array[Int] = {
+  def function3MapToInt(f: (Int, Int, Int) => Int): ArrayWrapper = {
     val result = arr.clone
     var i = 0
     while(i < size) {
@@ -55,7 +62,7 @@ class ArrayWrapper(arr: Array[Int]) {
       result(i) = f(x, x, x)
       i += 1
     }
-    result
+    new ArrayWrapper(result)
   }
 
   def function3MapToT[T: ClassTag](f: (Int, Int, Int) => T): Array[T] = {
@@ -69,7 +76,7 @@ class ArrayWrapper(arr: Array[Int]) {
     result
   }
 
-  def traitMapToInt(f: IntFunc): Array[Int] = {
+  def traitMapToInt(f: IntFunc): ArrayWrapper = {
     val result = arr.clone
     var i = 0
     while(i < size) {
@@ -77,7 +84,7 @@ class ArrayWrapper(arr: Array[Int]) {
       result(i) = f(x, x, x)
       i += 1
     }
-    result
+    new ArrayWrapper(result)
   }
 
   def traitMapToT[T: ClassTag](f: IntFunc2[T]): Array[T] = {
@@ -88,6 +95,7 @@ class ArrayWrapper(arr: Array[Int]) {
       result(i) = f(x, x, x)
       i += 1
     }
+
     result
   }
 

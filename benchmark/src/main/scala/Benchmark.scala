@@ -19,23 +19,32 @@ class BoxingBenchmark extends BenchmarkUtils {
 
   def funk(col: Int, row: Int, z: Int): Int = col + row + z
 
+//   def timeMacroConversionAnonymous(reps: Int) = run(reps)(macroConversionAnonymous)
+//   def macroConversionAnonymous = {
+//     val goal = ints.clone
+//     val w = new ArrayWrapper(goal)
+//     val x = w.map(I { (col, row, z) => z + 1 })
+// //    val x = w.map { (col: Int, row: Int, z: Int) => z + 1 }
+// //    val x = w.map { (col, row, z) => z + 1 }
+//     x
+//   }
+
+//   def timeMacroCoversionMethod(reps: Int) = run(reps)(macroConversionMethod)
+//   def macroConversionMethod = {
+//     val goal = ints.clone
+//     val w = new ArrayWrapper(goal)
+//     val x = w.map(funk _)
+//     x
+//   }
+
   def timeMacroMapperAnonymous(reps: Int) = run(reps)(macroMapperAnonymous)
   def macroMapperAnonymous = {
     val goal = ints.clone
     val w = new ArrayWrapper(goal)
-    val x = w.map(I { (col, row, z) => z + 1 })
-//    val x = w.map { (col: Int, row: Int, z: Int) => z + 1 }
-//    val x = w.map { (col, row, z) => z + 1 }
+    val x = w.map { (col, row, z) => z + 1 }
     x
   }
 
-  def timeMacroMapperMethod(reps: Int) = run(reps)(macroMapperMethod)
-  def macroMapperMethod = {
-    val goal = ints.clone
-    val w = new ArrayWrapper(goal)
-    val x = w.map(funk _)
-    x
-  }
 
   def timeFunction1MapToInt(reps: Int) = run(reps)(function1MapToInt)
   def function1MapToInt = {
